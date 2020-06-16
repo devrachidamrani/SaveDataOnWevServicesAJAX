@@ -1,0 +1,52 @@
+<html>
+  <head> </head>
+  <style>
+    form {
+      max-width: 300px;
+      margin: auto;
+      margin-top: 30px;
+    }
+
+    input[type="submit"] {
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+
+    #result {
+      margin-top 40px;
+      text-align: center;
+    }
+  </style>
+  <body>
+    <form id="form">
+      <label>Saisissez une valeur <input type="text" id="value" /></label><br />
+      <input type="submit" value="Envoyer" />
+    </form>
+
+    <h3 id="result"></h3>
+
+    <hr />
+
+    <script>
+      document.getElementById('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        send();
+      });
+
+      function send() {
+        const xhr = new XMLHttpRequest();
+        let value = document.getElementById('value').value;
+        xhr.onload = function () {
+          const serverresponse = document.getElementById('result');
+          let json = this.response;
+          let jsonParsed = JSON.parse(json).postData.text;
+          serverresponse.textContent = JSON.parse(jsonParsed).value.trim();
+        };
+
+        xhr.open('POST', 'https://mockbin.com/request');
+        xhr.setRequestHeader('Content-type', 'application/json');
+        xhr.send(JSON.stringify({ value: value }));
+      }
+    </script>
+  </body>
+</html>
